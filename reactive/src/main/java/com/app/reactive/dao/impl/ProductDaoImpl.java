@@ -2,6 +2,7 @@ package com.app.reactive.dao.impl;
 
 import com.app.reactive.dao.ProductDao;
 import com.app.reactive.dto.ProductDto;
+import com.app.reactive.model.ProductModel;
 import com.app.reactive.repository.ProductRepository;
 import com.app.reactive.utils.ModelDtoMapper;
 import lombok.RequiredArgsConstructor;
@@ -62,7 +63,12 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public Mono<ProductDto> partialUpdateProduct(ProductDto productDto) {
 
-        return productRepository.findByName(productDto.getName());
+        return productRepository
+                .findByName(productDto.getName())
+                .defaultIfEmpty(productDto)
+                .map(emp -> ModelDtoMapper.INSTANCE.dtoToModelMapping(productDto))
+                .map(ModelDtoMapper.INSTANCE::modelToDtoMapping
+                );
     }
 
 
