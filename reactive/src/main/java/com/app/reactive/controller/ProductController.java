@@ -29,10 +29,18 @@ public class ProductController {
         return productService.addProduct(productDto);
     }
 
-
     @DeleteMapping("/{id}")
     public Mono<ProductDto> removeProductById(@PathVariable String id) {
         return productService.removeProductById(id);
     }
 
+    @PutMapping
+    public Mono<ProductDto> updateProductByName(@RequestBody ProductDto productDto) {
+        return productService.updateProduct(productDto);
+    }
+
+    @PatchMapping
+    public Mono<ProductDto> partialUpdateProduct(@RequestBody ProductDto productDto) {
+        return productService.partialUpdateProduct(productDto);
+    }
 }

@@ -16,5 +16,9 @@ public interface ProductDao {
 
     Mono<ProductDto> removeProductById(String id);
 
+    Mono<ProductDto> updateProduct(ProductDto productDto);
+
+    Mono<ProductDto> partialUpdateProduct(ProductDto productDto);
+
 
 }

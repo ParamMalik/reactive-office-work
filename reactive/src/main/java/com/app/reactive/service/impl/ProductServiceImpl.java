@@ -35,4 +35,14 @@ public class ProductServiceImpl implements ProductService {
     public Mono<ProductDto> removeProductById(String id) {
         return productDao.removeProductById(id);
     }
+
+    @Override
+    public Mono<ProductDto> updateProduct(ProductDto productDto) {
+        return productDao.updateProduct(productDto);
+    }
+
+    @Override
+    public Mono<ProductDto> partialUpdateProduct(ProductDto productDto) {
+        return productDao.partialUpdateProduct(productDto);
+    }
 }

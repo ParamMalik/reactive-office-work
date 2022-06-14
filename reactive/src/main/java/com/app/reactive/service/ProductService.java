@@ -15,4 +15,8 @@ public interface ProductService {
 
     Mono<ProductDto> removeProductById(String id);
 
+    Mono<ProductDto> updateProduct(ProductDto productDto);
+
+    Mono<ProductDto> partialUpdateProduct(ProductDto productDto);
+
 }

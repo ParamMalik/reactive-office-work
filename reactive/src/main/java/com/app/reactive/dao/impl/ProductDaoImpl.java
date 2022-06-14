@@ -14,25 +14,45 @@ import reactor.core.publisher.Mono;
 public class ProductDaoImpl implements ProductDao {
 
     private final ProductRepository productRepository;
+
     @Override
     public Mono<ProductDto> getProductById(String id) {
-        return productRepository.findById(id).map(ModelDtoMapper.INSTANCE::modelToDtoMapping);
+        return productRepository
+                .findById(id)
+                .map(ModelDtoMapper.INSTANCE::modelToDtoMapping);
     }
 
     @Override
     public Flux<ProductDto> getAllProduct() {
-        return productRepository.findAll().map(ModelDtoMapper.INSTANCE::modelToDtoMapping);
+        return productRepository
+                .findAll()
+                .map(ModelDtoMapper.INSTANCE::modelToDtoMapping);
     }
 
     @Override
     public Mono<ProductDto> addProduct(ProductDto productDto) {
-        return productRepository.save(ModelDtoMapper.INSTANCE.dtoToModelMapping(productDto)).map(ModelDtoMapper.INSTANCE::modelToDtoMapping);
+        return productRepository
+                .save(ModelDtoMapper.INSTANCE.dtoToModelMapping(productDto))
+                .map(ModelDtoMapper.INSTANCE::modelToDtoMapping);
     }
 
 
     @Override
     public Mono<ProductDto> removeProductById(String id) {
-        return productRepository.findById(id).map(ModelDtoMapper.INSTANCE::modelToDtoMapping);
+        return productRepository
+                .findById(id)
+                .map(ModelDtoMapper.INSTANCE::modelToDtoMapping);
     }
+
+    @Override
+    public Mono<ProductDto> updateProduct(ProductDto productDto) {
+        return productRepository.findByName(productDto.getName()).map(ModelDtoMapper.INSTANCE::modelToDtoMapping);
+    }
+
+    @Override
+    public Mono<ProductDto> partialUpdateProduct(ProductDto productDto) {
+        return null;
+    }
+
 
 }
