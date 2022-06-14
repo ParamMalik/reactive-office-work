@@ -46,12 +46,23 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Mono<ProductDto> updateProduct(ProductDto productDto) {
-        return productRepository.findByName(productDto.getName()).map(ModelDtoMapper.INSTANCE::modelToDtoMapping);
+        return productRepository
+                .findByName(productDto.getName())
+                .defaultIfEmpty(productDto)
+                .map(foundProduct -> {
+                    foundProduct.setName(productDto.getName());
+                    foundProduct.setQuantity(productDto.getQuantity());
+                    return foundProduct;
+                })
+                .map(ModelDtoMapper.INSTANCE::dtoToModelMapping)
+                .flatMap(productRepository::save)
+                .map(ModelDtoMapper.INSTANCE::modelToDtoMapping);
     }
 
     @Override
     public Mono<ProductDto> partialUpdateProduct(ProductDto productDto) {
-        return null;
+
+        return productRepository.findByName(productDto.getName());
     }
 
 
