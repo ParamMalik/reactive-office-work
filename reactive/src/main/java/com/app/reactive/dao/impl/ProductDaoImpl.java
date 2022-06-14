@@ -40,12 +40,7 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public Mono<Void> removeProductById(String id) {
         return productRepository
-                .findById(id)
-                .flatMap(product -> {
-                    productRepository.delete(product);
-                    return product;
-                })
-                .map();
+                .deleteById(id);
 
     }
 

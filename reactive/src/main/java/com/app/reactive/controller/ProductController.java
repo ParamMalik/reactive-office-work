@@ -43,8 +43,7 @@ public class ProductController {
     @DeleteMapping
     public Mono<ResponseEntity<Void>> removeAllProducts() {
         return productService.removeAllProducts()
-                .map(ResponseEntity.ok()::body)
-                .switchIfEmpty(Mono.just(ResponseEntity.noContent().build()));
+                .map(ResponseEntity.ok()::body);
     }
 
     // Updating NAME and Price
