@@ -2,7 +2,6 @@ package com.app.reactive.dao.impl;
 
 import com.app.reactive.dao.ProductDao;
 import com.app.reactive.dto.ProductDto;
-import com.app.reactive.model.ProductModel;
 import com.app.reactive.repository.ProductRepository;
 import com.app.reactive.utils.ModelDtoMapper;
 import lombok.RequiredArgsConstructor;
@@ -39,21 +38,30 @@ public class ProductDaoImpl implements ProductDao {
 
 
     @Override
-    public Mono<ProductDto> removeProductById(String id) {
+    public Mono<Void> removeProductById(String id) {
         return productRepository
                 .findById(id)
-                .map(ModelDtoMapper.INSTANCE::modelToDtoMapping);
+                .flatMap(product -> {
+                    productRepository.delete(product);
+                    return product;
+                })
+                .map();
+
+    }
+
+    @Override
+    public Mono<Void> removeAllProducts() {
+        return productRepository.deleteAll();
     }
 
     @Override
     public Mono<ProductDto> updateProduct(ProductDto productDto) {
         return productRepository
                 .findByName(productDto.getName())
-                .defaultIfEmpty(productDto)
-                .map(foundProduct -> {
-                    foundProduct.setName(productDto.getName());
-                    foundProduct.setQuantity(productDto.getQuantity());
-                    return foundProduct;
+                .map(product -> {
+                    product.setPrice(productDto.getPrice());
+                    product.setQuantity(productDto.getQuantity());
+                    return product;
                 })
                 .map(ModelDtoMapper.INSTANCE::dtoToModelMapping)
                 .flatMap(productRepository::save)
@@ -64,12 +72,13 @@ public class ProductDaoImpl implements ProductDao {
     public Mono<ProductDto> partialUpdateProduct(ProductDto productDto) {
 
         return productRepository
-                .findByName(productDto.getName())
-                .defaultIfEmpty(productDto)
-                .map(emp -> ModelDtoMapper.INSTANCE.dtoToModelMapping(productDto))
-                .map(ModelDtoMapper.INSTANCE::modelToDtoMapping
-                );
+                .findById(productDto.getId())
+                .map(product -> {
+                            ModelDtoMapper.INSTANCE.updateProductFromDto(productDto, product);
+                            return product;
+                        }
+                ).flatMap(productRepository::save)
+                .map(ModelDtoMapper.INSTANCE::modelToDtoMapping);
     }
-
 
 }

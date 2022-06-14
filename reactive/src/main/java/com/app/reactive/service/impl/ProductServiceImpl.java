@@ -2,7 +2,6 @@ package com.app.reactive.service.impl;
 
 import com.app.reactive.dao.ProductDao;
 import com.app.reactive.dto.ProductDto;
-import com.app.reactive.model.ProductModel;
 import com.app.reactive.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,8 +31,13 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public Mono<ProductDto> removeProductById(String id) {
+    public Mono<Void> removeProductById(String id) {
         return productDao.removeProductById(id);
+    }
+
+    @Override
+    public Mono<Void> removeAllProducts() {
+        return productDao.removeAllProducts();
     }
 
     @Override

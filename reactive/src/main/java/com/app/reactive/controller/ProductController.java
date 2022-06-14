@@ -3,6 +3,7 @@ package com.app.reactive.controller;
 import com.app.reactive.dto.ProductDto;
 import com.app.reactive.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -15,8 +16,10 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping(value = "/{id}")
-    public Mono<ProductDto> getProductById(@PathVariable String id) {
-        return productService.getProductById(id);
+    public Mono<ResponseEntity<ProductDto>> getProductById(@PathVariable String id) {
+        return productService.getProductById(id)
+                .map(ResponseEntity.ok()::body)
+                .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
     }
 
     @GetMapping
@@ -25,22 +28,41 @@ public class ProductController {
     }
 
     @PostMapping
-    public Mono<ProductDto> addProduct(@RequestBody ProductDto productDto) {
-        return productService.addProduct(productDto);
+    public Mono<ResponseEntity<ProductDto>> addProduct(@RequestBody ProductDto productDto) {
+        return productService.addProduct(productDto)
+                .map(ResponseEntity.accepted()::body)
+                .switchIfEmpty(Mono.just(ResponseEntity.noContent().build()));
     }
 
     @DeleteMapping("/{id}")
-    public Mono<ProductDto> removeProductById(@PathVariable String id) {
-        return productService.removeProductById(id);
+    public Mono<ResponseEntity<Void>> removeProductById(@PathVariable String id) {
+        return productService.removeProductById(id)
+                .map(ResponseEntity.ok()::body);
     }
+
+    @DeleteMapping
+    public Mono<ResponseEntity<Void>> removeAllProducts() {
+        return productService.removeAllProducts()
+                .map(ResponseEntity.ok()::body)
+                .switchIfEmpty(Mono.just(ResponseEntity.noContent().build()));
+    }
+
+    // Updating NAME and Price
 
     @PutMapping
-    public Mono<ProductDto> updateProductByName(@RequestBody ProductDto productDto) {
-        return productService.updateProduct(productDto);
+    public Mono<ResponseEntity<ProductDto>> updateProductByName(@RequestBody ProductDto productDto) {
+        return productService.updateProduct(productDto)
+                .map(ResponseEntity.ok()::body)
+                .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
     }
 
+    // Partial Update
+
     @PatchMapping
-    public Mono<ProductDto> partialUpdateProduct(@RequestBody ProductDto productDto) {
-        return productService.partialUpdateProduct(productDto);
+    public Mono<ResponseEntity<ProductDto>> partialUpdateProduct(@RequestBody ProductDto productDto) {
+        return productService.partialUpdateProduct(productDto)
+                .map(ResponseEntity.ok()::body)
+                .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
+
     }
 }

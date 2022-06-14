@@ -1,7 +1,6 @@
 package com.app.reactive.dao;
 
 import com.app.reactive.dto.ProductDto;
-import com.app.reactive.model.ProductModel;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -14,7 +13,9 @@ public interface ProductDao {
     Mono<ProductDto> addProduct(ProductDto productDto);
 
 
-    Mono<ProductDto> removeProductById(String id);
+    Mono<Void> removeProductById(String id);
+
+    public Mono<Void> removeAllProducts();
 
     Mono<ProductDto> updateProduct(ProductDto productDto);
 
