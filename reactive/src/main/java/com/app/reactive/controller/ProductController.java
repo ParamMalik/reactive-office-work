@@ -5,6 +5,7 @@ import com.app.reactive.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.blockhound.shaded.net.bytebuddy.agent.VirtualMachine;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -34,10 +35,18 @@ public class ProductController {
                 .switchIfEmpty(Mono.just(ResponseEntity.noContent().build()));
     }
 
+
+//    public Mono<Profile> delete(String id) {
+//        return this.profileRepository
+//                .findById(id)
+//                .flatMap(p -> this.profileRepository.deleteById(p.getId()).thenReturn(p));
+//    }
+
     @DeleteMapping("/{id}")
-    public Mono<ResponseEntity<Void>> removeProductById(@PathVariable String id) {
+    public Mono<ResponseEntity<String>> removeProductById(@PathVariable String id) {
         return productService.removeProductById(id)
-                .map(ResponseEntity.ok()::body);
+                .map(r -> ResponseEntity.ok().body("Data deleted successfully"));
+//                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping
@@ -56,7 +65,6 @@ public class ProductController {
     }
 
     // Partial Update
-
     @PatchMapping
     public Mono<ResponseEntity<ProductDto>> partialUpdateProduct(@RequestBody ProductDto productDto) {
         return productService.partialUpdateProduct(productDto)
