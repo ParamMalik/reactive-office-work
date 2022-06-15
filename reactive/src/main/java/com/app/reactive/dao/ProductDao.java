@@ -1,9 +1,11 @@
 package com.app.reactive.dao;
 
 import com.app.reactive.dto.ProductDto;
-import com.app.reactive.model.ProductModel;
+import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+
 
 public interface ProductDao {
 

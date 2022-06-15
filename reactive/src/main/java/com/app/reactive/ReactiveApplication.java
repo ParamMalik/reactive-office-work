@@ -8,8 +8,6 @@ public class ReactiveApplication {
 
 
     public static void main(String[] args) {
-//        BlockHound.install();
-//        Thread.currentThread().sleep(200);
         SpringApplication.run(ReactiveApplication.class, args);
     }
 

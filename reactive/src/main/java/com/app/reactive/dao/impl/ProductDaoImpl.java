@@ -2,39 +2,41 @@ package com.app.reactive.dao.impl;
 
 import com.app.reactive.dao.ProductDao;
 import com.app.reactive.dto.ProductDto;
-import com.app.reactive.model.ProductModel;
+import com.app.reactive.mapper.ModelDtoMapper;
 import com.app.reactive.repository.ProductRepository;
-import com.app.reactive.utils.ModelDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.ResponseBody;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Repository
+
 @RequiredArgsConstructor
 public class ProductDaoImpl implements ProductDao {
 
     private final ProductRepository productRepository;
+    private final ModelDtoMapper mapper;
 
     @Override
     public Mono<ProductDto> getProductById(String id) {
         return productRepository
                 .findById(id)
-                .map(ModelDtoMapper.INSTANCE::modelToDtoMapping);
+                .map(mapper::modelToDtoMapping);
     }
 
     @Override
     public Flux<ProductDto> getAllProduct() {
         return productRepository
                 .findAll()
-                .map(ModelDtoMapper.INSTANCE::modelToDtoMapping);
+                .map(mapper::modelToDtoMapping);
     }
 
     @Override
     public Mono<ProductDto> addProduct(ProductDto productDto) {
         return productRepository
-                .save(ModelDtoMapper.INSTANCE.dtoToModelMapping(productDto))
-                .map(ModelDtoMapper.INSTANCE::modelToDtoMapping);
+                .save(mapper.dtoToModelMapping(productDto))
+                .map(mapper::modelToDtoMapping);
     }
 
 
@@ -44,7 +46,7 @@ public class ProductDaoImpl implements ProductDao {
                 .findById(id)
                 .flatMap(product -> productRepository
                         .delete(product)
-                        .thenReturn(ModelDtoMapper.INSTANCE.modelToDtoMapping(product)));
+                        .thenReturn(mapper.modelToDtoMapping(product)));
 
     }
 
@@ -53,11 +55,6 @@ public class ProductDaoImpl implements ProductDao {
         return productRepository.deleteAll();
     }
 
-//    @Override
-//    public Flux<ProductModel> removeAllProducts() {
-//        return productRepository.findAll();
-//
-//    }
 
     @Override
     public Mono<ProductDto> updateProduct(ProductDto productDto) {
@@ -68,9 +65,9 @@ public class ProductDaoImpl implements ProductDao {
                     product.setQuantity(productDto.getQuantity());
                     return product;
                 })
-                .map(ModelDtoMapper.INSTANCE::dtoToModelMapping)
+                .map(mapper::dtoToModelMapping)
                 .flatMap(productRepository::save)
-                .map(ModelDtoMapper.INSTANCE::modelToDtoMapping);
+                .map(mapper::modelToDtoMapping);
     }
 
     @Override
@@ -79,11 +76,11 @@ public class ProductDaoImpl implements ProductDao {
         return productRepository
                 .findById(productDto.getId())
                 .map(product -> {
-                            ModelDtoMapper.INSTANCE.updateProductFromDto(productDto, product);
+                            mapper.updateProductFromDto(productDto, product);
                             return product;
                         }
                 ).flatMap(productRepository::save)
-                .map(ModelDtoMapper.INSTANCE::modelToDtoMapping);
+                .map(mapper::modelToDtoMapping);
     }
 
 }

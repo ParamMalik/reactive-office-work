@@ -19,7 +19,7 @@ public class ProductController {
     public Mono<ResponseEntity<ProductDto>> getProductById(@PathVariable String id) {
         return productService.getProductById(id)
                 .map(ResponseEntity.ok()::body)
-                .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
+                .switchIfEmpty(Mono.just(ResponseEntity.noContent().build()));
     }
 
     @GetMapping

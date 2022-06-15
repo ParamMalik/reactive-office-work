@@ -1,14 +1,14 @@
-package com.app.reactive.utils;
+package com.app.reactive.mapper;
 
 import com.app.reactive.dto.ProductDto;
 import com.app.reactive.model.ProductModel;
-import org.mapstruct.*;
-import org.mapstruct.factory.Mappers;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface ModelDtoMapper {
-
-    ModelDtoMapper INSTANCE = Mappers.getMapper(ModelDtoMapper.class);
 
     ProductModel dtoToModelMapping(ProductDto productDto);
 

@@ -1,7 +1,6 @@
 package com.app.reactive.service;
 
 import com.app.reactive.dto.ProductDto;
-import com.app.reactive.model.ProductModel;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
