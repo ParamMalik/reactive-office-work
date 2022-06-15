@@ -13,9 +13,9 @@ public interface ProductService {
     Mono<ProductDto> addProduct(ProductDto productDto);
 
 
-    Mono<Void> removeProductById(String id);
+    Mono<ProductDto> removeProductById(String id);
 
-    public Mono<Void> removeAllProducts();
+    Mono<Void> removeAllProducts();
 
     Mono<ProductDto> updateProduct(ProductDto productDto);
 

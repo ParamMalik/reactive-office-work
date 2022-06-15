@@ -31,7 +31,7 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public Mono<Void> removeProductById(String id) {
+    public Mono<ProductDto> removeProductById(String id) {
         return productDao.removeProductById(id);
     }
 

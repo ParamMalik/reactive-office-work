@@ -2,6 +2,7 @@ package com.app.reactive.dao.impl;
 
 import com.app.reactive.dao.ProductDao;
 import com.app.reactive.dto.ProductDto;
+import com.app.reactive.model.ProductModel;
 import com.app.reactive.repository.ProductRepository;
 import com.app.reactive.utils.ModelDtoMapper;
 import lombok.RequiredArgsConstructor;
@@ -38,9 +39,12 @@ public class ProductDaoImpl implements ProductDao {
 
 
     @Override
-    public Mono<Void> removeProductById(String id) {
+    public Mono<ProductDto> removeProductById(String id) {
         return productRepository
-                .deleteById(id);
+                .findById(id)
+                .flatMap(product -> productRepository
+                        .delete(product)
+                        .thenReturn(ModelDtoMapper.INSTANCE.modelToDtoMapping(product)));
 
     }
 
@@ -48,6 +52,12 @@ public class ProductDaoImpl implements ProductDao {
     public Mono<Void> removeAllProducts() {
         return productRepository.deleteAll();
     }
+
+//    @Override
+//    public Flux<ProductModel> removeAllProducts() {
+//        return productRepository.findAll();
+//
+//    }
 
     @Override
     public Mono<ProductDto> updateProduct(ProductDto productDto) {
