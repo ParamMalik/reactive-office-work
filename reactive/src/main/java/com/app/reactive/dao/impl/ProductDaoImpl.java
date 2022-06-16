@@ -6,12 +6,10 @@ import com.app.reactive.mapper.ModelDtoMapper;
 import com.app.reactive.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.ResponseBody;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Repository
-
 @RequiredArgsConstructor
 public class ProductDaoImpl implements ProductDao {
 
@@ -55,17 +53,15 @@ public class ProductDaoImpl implements ProductDao {
         return productRepository.deleteAll();
     }
 
-
     @Override
     public Mono<ProductDto> updateProduct(ProductDto productDto) {
         return productRepository
-                .findByName(productDto.getName())
+                .findById(productDto.getId())
                 .map(product -> {
                     product.setPrice(productDto.getPrice());
                     product.setQuantity(productDto.getQuantity());
                     return product;
                 })
-                .map(mapper::dtoToModelMapping)
                 .flatMap(productRepository::save)
                 .map(mapper::modelToDtoMapping);
     }

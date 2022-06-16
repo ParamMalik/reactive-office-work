@@ -1,0 +1,29 @@
+version: '3'
+services:
+  mongodb: 
+    image: mongo
+    ports:
+     - 27018:27017
+    networks:
+      - newnet 
+  mongo-express:
+    image: mongo-express
+    depends_on:
+     - "mongodb"
+    ports:
+     - 8080:8080
+    networks:
+     - newnet  
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+  product-app:
+    image: product-app:latest
+    ports: 
+     - 9090:8080
+    depends_on:
+     - "mongodb"
+    networks:
+     - newnet  
+
+networks:
+   newnet:      

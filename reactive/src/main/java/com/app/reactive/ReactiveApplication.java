@@ -11,5 +11,4 @@ public class ReactiveApplication {
         SpringApplication.run(ReactiveApplication.class, args);
     }
 
-
 }
